@@ -32,9 +32,9 @@ import java.sql.Statement;
           statement.setQueryTimeout(30);
           ResultSet rs = statement.executeQuery("SELECT *  FROM users where username='"+name+"';");
           int counter =0;
-          while(rs.next())//change this is not good practice.
+          while(rs.next())//change this entire block, is not good practice.
           {
-            counter ++;
+            counter=counter+1;
           }
           if(counter==0){
             return false;
@@ -48,7 +48,27 @@ import java.sql.Statement;
         
         return false;
       }
+      public static String getPasswordUserFromDB(String name) {
+        try (Statement statement = connection.createStatement()) 
+        {
+          statement.setQueryTimeout(30);
+          ResultSet rs = statement.executeQuery("SELECT *  FROM users where username='"+name+"';");
 
+          if(rs.next())
+          {
+            return  rs.getString(2);
+          }
+          else{
+            return null;
+          }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+       
+      }
       public static int setUser(String username,String password){
         String consulta = "INSERT INTO users (username,password) VALUES (?,?);";
         try  
@@ -73,4 +93,13 @@ import java.sql.Statement;
 
       
       static Connection connection;
+
+
+
+
+
+
+
+
+    
     }

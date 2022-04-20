@@ -5,13 +5,10 @@ import java.util.Calendar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
+import org.mindrot.jbcrypt.BCrypt;
+
+
 public class JwtAuth {
    
     
@@ -27,18 +24,18 @@ public class JwtAuth {
         .sign(algorithm);
     }
 
-    @Bean
-    public static PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+    public static String saltPassword(String password){
+        return BCrypt.hashpw(password, BCrypt.gensalt(10));
     }
-   
-
-   
-    @Bean
-    public static WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/ignore1", "/ignore2");
+    public static boolean comparePassword(String candidate,String password){
+      return BCrypt.checkpw(candidate, password);
     }
+    
 
+
+  
+   
+   
     /*
     @Override
 	public void configure(WebSecurity web) throws Exception {
