@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 
     public class MySQLlite
@@ -24,6 +23,7 @@ import java.util.List;
           System.out.println(e);
           throw e;
         }
+        //TODO add create tables to db if no exist
 
       }
       public static ArrayList<String> getUsers(){
