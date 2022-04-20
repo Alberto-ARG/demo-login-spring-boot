@@ -2,6 +2,7 @@ package com.bloodarg.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,30 +24,53 @@ import java.sql.Statement;
         }
 
       }
-      public static void testDb(){
-        try (
-          Statement statement = connection.createStatement()) {
-          statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-          statement.executeUpdate("drop table if exists person");
-          statement.executeUpdate("create table person (id integer, name string)");
-          statement.executeUpdate("insert into person values(1, 'leo')");
-          statement.executeUpdate("insert into person values(2, 'yui')");
-          ResultSet rs = statement.executeQuery("select * from person");
-          while(rs.next())
+      public static boolean isUserName(String name) {
+
+        try (Statement statement = connection.createStatement()) 
+        {
+          statement.setQueryTimeout(30);
+          ResultSet rs = statement.executeQuery("SELECT *  FROM users where username='"+name+"';");
+          int counter =0;
+          while(rs.next())//change this is not good practice.
           {
-            // read the result set
-            System.out.println("name = " + rs.getString("name"));
-            System.out.println("id = " + rs.getInt("id"));
+            counter ++;
+          }
+          if(counter==0){
+            return false;
+          }
+          else{
+            return true;
           }
         } catch (SQLException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
+        }
+        
+        return false;
+      }
+
+      public static int setUser(String username,String password){
+        String consulta = "INSERT INTO users (username,password) VALUES (?,?);";
+        try  
+        {
+          PreparedStatement sentencia = connection.prepareStatement(consulta);
+          sentencia.setString(1, username);
+          sentencia.setString(2, password);
+         
+          return  sentencia.executeUpdate();
+
+        } catch (SQLException e) {
+          e.printStackTrace();
+          return -1;
         }
       }
 
-
-
      
+      
+
+
+
+
+      
       static Connection connection;
     }
