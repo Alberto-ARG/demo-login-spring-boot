@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
     public class MySQLlite
@@ -24,7 +26,29 @@ import java.sql.Statement;
         }
 
       }
+      public static ArrayList<String> getUsers(){
+        var list = new ArrayList<String>();
 
+        try (Statement statement = connection.createStatement()) 
+        {
+          statement.setQueryTimeout(30);
+          ResultSet rs = statement.executeQuery("SELECT *  FROM users;");
+
+          while(rs.next())
+          {
+            list.add(rs.getString(1));
+          }
+
+          return list;
+         
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+      }
       public static boolean isUserName(String name) {
 
         try (Statement statement = connection.createStatement()) 

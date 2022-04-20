@@ -5,13 +5,26 @@ import java.util.Calendar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 
 
 public class JwtAuth {
    
-    
+    public static DecodedJWT validateToken(String token) {
+        
+       try {
+        return JWT.require(algorithm).build().verify(token);
+       } catch (Exception e) {
+           e.printStackTrace();
+            return null;
+       }
+   
+        
+    }
+
     public static void startJwt(){
         algorithm=Algorithm.HMAC256(secret);
     }
@@ -59,5 +72,6 @@ public class JwtAuth {
 
     private   static  String secret ="notSecretAnymore";//move to sort off file o some type param in ejecution time
 
+   
   
 }
